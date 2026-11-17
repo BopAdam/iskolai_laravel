@@ -1,19 +1,45 @@
 <?php
 
+
 namespace App\Http\Controllers\api;
+
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Drink;
 use App\Services\DrinkService;
 use App\traits\ResponseHandler;
+use App\Http\Requests\DrinkRequest;
 
 class DrinkController extends Controller
 {
     use ResponseHandler;
-    public function __construct( protected DrinkService $drinkservice){}
-    public function getDrinks() {
-        $drinks = Drink::all();
-        return $drinks;
+
+
+    public function __construct(protected DrinkService $drinkService) {}
+    public function getDrinks()
+    {
+
+
+        $drinks = $this->drinkService->getDrinks();
+
+
+        return $this->sendResponse($drinks);
     }
+    public function show(Drink $drink)
+    {
+
+        $oneDrink = $this->drinkService->getDrink($drink);
+
+
+        return $this->sendResponse($oneDrink);
+    }
+
+    public function create(DrinkRequest $request) {
+        $validated = $request ->validated();
+
+        $result = $this->drinkService -> createDrink();
+    }
+
+
 }
